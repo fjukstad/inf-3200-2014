@@ -1,0 +1,199 @@
+The Go Programming Language
+
+*Bjørn* *Fjukstad* 
+Ph.D. Student
+Department of Computer Science
+bjorn@cs.uit.no
+
+_1._ _September_ _2014_ 
+
+# * Section
+# ** Subsection
+# *** Subsubsection
+
+# _italics_
+# *bold* 
+# .image /path/to/image height width
+# .iframe /path/to/iframe height width
+# [[URL][text to show]]
+
+
+* What is go? 
+
+- New open-source programming language
+- Concurrent, garbage-collected and designed as a systems language 
+- Extremely powerful standard library
+- [[http://golang.org][golang.org]]
+
+* Hello World
+.play -numbers hello-world.go
+
+* Packages 
+- Every Go program is made up of packages.
+- Programs start running in package `main`.
+- This program is using the packages with import paths "fmt" and “math/rand". 
+.play packages.go
+
+* Importing remote packages 
+- Go allows you to import remote packages from e.g. [[http://code.google.com]] or [[http://github.com]]
+
+    import (
+        “code.google.com/p/go.example/hello”
+        “github.com/user/package”
+    )
+
+* Variables
+- The `var` statement declares a list of variables; the type is last.
+.play variables.go
+
+* Variables with initializers
+- A var declaration can include initializers, one per variable.
+- If an initializer is present, the type can be omitted; the variable will take the type of the initializer.
+.play variables-init.go
+
+* Short variable declarations
+- Inside a function, the := short assignment statement can be used in place of a `var` declaration with implicit type.
+- Outside a function, every construct begins with a keyword (`var`, `func`, and so on) and the := construct is not available.
+.play short-variables.go
+
+* Basic types 
+
+    bool
+
+    string
+
+    int  int8  int16  int32  int64
+    uint uint8 uint16 uint32 uint64 uintptr
+
+    byte // alias for uint8
+
+    rune // alias for int32
+         // represents a Unicode code point
+
+    float32 float64
+
+    complex64 complex128
+
+* Functions 
+
+- A function can take zero or more arguments.
+- In this example, add takes two parameters of type `int`.
+- Notice that the type comes after the variable name.
+.play functions.go
+
+
+* Multiple results 
+- A function can return any number of results.
+- This function returns two strings.
+.play multiple-results.go
+
+* For
+- Go has only one looping construct, the `for` loop.
+- The basic for loop looks as it does in C or Java, except that the ( ) are gone (they are not even optional) and the { } are required.
+- In Go, `while` is written `for`
+.play for.go
+
+* Structs
+- A `struct` is a collection of fields.
+(And a type declaration does what you'd expect.)
+
+.play structs.go
+
+* Allocation with new 
+- `new(T)` allocates zeroed storage for a new item of type `T` and returns its address, a value of type `*T`.
+- Struct fields are accessed using a dot. Only fields that start with a capital letter are exported.
+.play new-alloc.go
+
+* Pointers
+- Go has pointers, but no pointer arithmetic.
+- Struct fields can be accessed through a struct pointer. The indirection through the pointer is transparent.
+.play pointers.go
+
+* Arrays
+- The type `[n]T` is an array of `n` values of type T.
+- The following expression declares a variable `a` as an array of ten integers.
+
+	var a [10]int
+
+- An array's length is part of its type, so arrays cannot be resized.
+.play arrays.go
+
+* Slices
+- A slice points to an array of values and also includes a length.
+- `[]T` is a slice with elements of type `T`.
+- Slices can be re-sliced, creating a new slice value that points to the same array.
+.play slices.go
+
+
+* Making slices
+- Slices are created with the make (not new) function. It works by allocating a zeroed array and returning a slice that refers to that array.
+- To specify a capacity, pass a third a regiment to `make`  
+- Use `append` to add items to a slice
+.play making-slices.go
+
+* Maps
+- A `map` maps keys to values.
+- Maps must be created with `make` before use; the nil map is empty and cannot be assigned to.
+.play maps.go
+
+* Methods
+- Go does not have classes. However, you can define methods on struct types.
+# - The method receiver appears in its own argument list between the func keyword and the method name.
+.play methods.go
+
+* Interfaces 
+- An interface type is defined by a set of methods.
+- A value of interface type can hold any value that implements those methods.
+.play interfaces.go /START OMIT/,/END OMIT/
+
+* Errors
+- An error is anything that can describe itself as an error string. The idea is captured by the predefined, built-in interface type, error, with its single method, Error, returning a string:
+
+    type error interface {
+        Error() string
+    }
+
+* MyError
+.play error.go /START OMIT/,/END OMIT/
+
+
+* Goroutines
+- A goroutine is a lightweight thread managed by the Go runtime.
+
+    go f(x, y, z)
+
+starts a new goroutine running
+
+    f(x, y, z)
+
+The evaluation of `f`, `x`, `y`, and `z` happens in the current goroutine and the execution of `f` happens in the new goroutine.
+
+* Goroutines
+.play goroutines.go
+
+* Goroutines
+- Goroutines run in the same address space, so access to shared memory must be synchronized.
+- The `sync` package provides useful primitives, although you won't need them much in Go as there are other primitives. (See the next slide.)
+
+* Channels 
+- Channels are a typed conduit through which you can send and receive values with the channel operator, `<-`.
+- By default, sends and receives block until the other side is ready. This allows goroutines to synchronize without explicit locks or condition variables.
+
+    ch := make(chan int)
+
+    ch <- v    // Send v to channel ch.
+    v := <-ch  // Receive from ch, and
+               // assign value to v.\
+
+* Channels
+.play channels.go /START OMIT/,/END OMIT/
+
+* Web Servers
+- Package http serves HTTP requests using any value that implements `http.Handler`:
+- Visit `localhost:4000` to see the greeting. (does not work on online slides)
+.play web-server.go
+
+* Where to go from here
+- This lecture is based on [[golang.org/tour][A Tour of Go]], [[http://golang.org/doc/code.html][How to Write Go Code]] and [[https://golang.org/doc/effective_go.html][Effective Go]], so go have a look!
+- Watch Rob Pike's [[https://www.youtube.com/watch?v=cN_DpYBzKso][Concurrency is not Parallelism]]!
+
